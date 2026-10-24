@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESCO-CV.SN— Créez votre CV en quelques minutes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A4A;
+    --ink-soft:#3C4C6E;
+    --paper:#F7F4EC;
+    --paper-raised:#FFFDF8;
+    --gold:#C9962C;
+    --gold-deep:#A87A1D;
+    --teal:#0F6E5F;
+    --clay:#B23A2E;
+    --line:#D8D0BE;
+    --shadow: 0 1px 0 rgba(27,42,74,.06);
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'IBM Plex Sans', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:var(--font-body);
+    background:var(--paper);
+    color:var(--ink);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(27,42,74,0.05) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+  header.top{
+    padding:28px 20px 18px;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+    background:var(--paper);
+  }
+  header.top .brand{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:-0.02em;
+  }
+  header.top .brand span{color:var(--gold-deep);}
+  header.top .tag{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-top:4px;
+    letter-spacing:.04em;
+  }
+
+  .wrap{max-width:640px; margin:0 auto; padding:20px 16px 80px;}
+
+  .tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:4px;
+    margin-bottom:18px;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:0 0 auto;
+    font-family:var(--font-mono);
+    font-size:11px;
+    padding:8px 12px 10px;
+    border-radius:8px 8px 0 0;
+    background:#EFE9D9;
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+    border-bottom:none;
+    position:relative;
+    white-space:nowrap;
+    transition:all .25s ease;
+  }
+  .tab.active{
+    background:var(--paper-raised);
+    color:var(--ink);
+    font-weight:600;
+    transform:translateY(2px);
+  }
+  .tab.done{color:var(--teal);}
+  .tab .stamp-dot{
+    display:inline-block;
+    width:6px;height:6px;
+    border-radius:50%;
+    background:var(--teal);
+    margin-right:5px;
+    opacity:0;
+    transform:scale(0);
+    transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  }
+  .tab.done .stamp-dot{opacity:1; transform:scale(1);}
+
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:2px 12px 12px 12px;
+    padding:28px 24px 26px;
+    box-shadow: var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg, var(--gold), var(--teal));
+  }
+  .step-eyebrow{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--gold-deep);
+    letter-spacing:.06em;
+    margin-bottom:6px;
+  }
+  .step-title{
+    font-family:var(--font-display);
+    font-size:24px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    margin:0 0 4px;
+  }
+  .step-sub{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin-bottom:22px;
+    line-height:1.5;
+  }
+
+  label{
+    display:block;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    margin-top:16px;
+  }
+  label:first-of-type{margin-top:0;}
+  input[type=text], input[type=tel], input[type=email], textarea, select{
+    width:100%;
+    font-family:var(--font-body);
+    font-size:15px;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#FCFAF4;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  input:focus, textarea:focus, select:focus{
+    border-color:var(--teal);
+    box-shadow:0 0 0 3px rgba(15,110,95,0.12);
+  }
+  textarea{resize:vertical; min-height:70px;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+
+  .photo-zone{display:flex; align-items:center; gap:16px;}
+  .photo-preview{
+    width:88px; height:88px;
+    border-radius:50%;
+    border:2px dashed var(--line);
+    background:#EFE9D9;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono);
+    font-size:10px;
+    color:var(--ink-soft);
+    text-align:center;
+    overflow:hidden;
+    flex:0 0 auto;
+  }
+  .photo-preview img{width:100%; height:100%; object-fit:cover;}
+  .btn-upload{
+    font-family:var(--font-mono);
+    font-size:12px;
+    font-weight:600;
+    padding:9px 14px;
+    border-radius:8px;
+    border:1px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .btn-upload:hover{background:var(--ink); color:var(--paper-raised);}
+
+  .chip-grid{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    font-size:13px;
+    padding:9px 14px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    background:#FCFAF4;
+    cursor:pointer;
+    transition:all .2s;
+    user-select:none;
+  }
+  .chip:hover{border-color:var(--gold);}
+  .chip.selected{background:var(--ink); border-color:var(--ink); color:var(--paper-raised);}
+
+  .entry{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px;
+    margin-bottom:12px;
+    background:#FCFAF4;
+    position:relative;
+  }
+  .entry-remove{
+    position:absolute; top:10px; right:10px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--clay);
+    background:none; border:none; cursor:pointer;
+  }
+  .btn-add{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--teal);
+    background:none;
+    border:1px dashed var(--teal);
+    border-radius:8px;
+    padding:10px;
+    width:100%;
+    cursor:pointer;
+    margin-top:4px;
+  }
+  .btn-add:hover{background:rgba(15,110,95,0.06);}
+
+  .level-bars{display:flex; gap:3px; margin-top:6px;}
+  .level-seg{
+    flex:1; height:8px; border-radius:2px;
+    background:var(--line); cursor:pointer;
+  }
+  .level-seg.filled{background:var(--ink);}
+  .level-label{font-family:var(--font-mono); font-size:10.5px; color:var(--ink-soft); margin-top:4px;}
+
+  .tpl-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .tpl-card{
+    border:2px solid var(--line);
+    border-radius:10px;
+    padding:10px;
+    cursor:pointer;
+    text-align:center;
+    transition:all .2s;
+  }
+  .tpl-card.selected{border-color:var(--gold); background:#FFF8E9;}
+  .tpl-mini{height:100px; border-radius:6px; margin-bottom:8px;}
+  .tpl-mini.classic{background:linear-gradient(180deg,var(--ink) 0 26px, #fff 26px); position:relative;}
+  .tpl-mini.moderne{background:#fff; border-left:8px solid var(--teal);}
+  .tpl-name{font-family:var(--font-mono); font-size:11px; font-weight:600;}
+
+  .recap-line{
+    display:flex; justify-content:space-between;
+    font-size:13.5px;
+    padding:9px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .recap-line span:first-child{color:var(--ink-soft);}
+  .price-box{
+    margin-top:18px;
+    background:var(--ink);
+    color:var(--paper-raised);
+    border-radius:10px;
+    padding:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .price-box .amount{font-family:var(--font-display); font-size:22px; font-weight:700;}
+
+  .pay-options{display:flex; flex-direction:column; gap:10px; margin-top:16px;}
+  .pay-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:14.5px;
+    padding:13px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+    color:#fff;
+  }
+  .pay-btn.wave{background:#1DC8E8;}
+  .pay-btn.om{background:#FF7900;}
+  .pay-number-box{
+    background:#FCFAF4;
+    border:1px dashed var(--line);
+    border-radius:10px;
+    padding:14px;
+    margin-top:14px;
+    text-align:center;
+  }
+  .pay-number-box .label{font-family:var(--font-mono); font-size:11px; color:var(--ink-soft); margin-bottom:4px;}
+  .pay-number-box .number{font-family:var(--font-display); font-size:20px; font-weight:700; letter-spacing:.03em;}
+  .pay-note{font-size:12px; color:var(--ink-soft); margin-top:10px; line-height:1.5;}
+
+  .nav-btns{display:flex; justify-content:space-between; margin-top:26px;}
+  .btn{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:14.5px;
+    padding:12px 20px;
+    border-radius:10px;
+    border:1px solid var(--ink);
+    cursor:pointer;
+    transition:all .2s;
+  }
+  .btn-primary{background:var(--ink); color:var(--paper-raised);}
+  .btn-primary:hover{background:var(--ink-soft);}
+  .btn-secondary{background:transparent; color:var(--ink);}
+  .btn-secondary:hover{background:#EFE9D9;}
+  .btn:disabled{opacity:.35; cursor:not-allowed;}
+
+  .stamp-overlay{
+    position:fixed; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    pointer-events:none;
+    z-index:50;
+  }
+  .stamp-mark{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:15px;
+    color:var(--teal);
+    border:3px solid var(--teal);
+    border-radius:50%;
+    width:96px; height:96px;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    line-height:1.1;
+    transform:scale(2.4) rotate(-18deg);
+    opacity:0;
+    background:rgba(247,244,236,0.9);
+  }
+  @keyframes stampIn{
+    0%{transform:scale(2.4) rotate(-18deg); opacity:0;}
+    55%{transform:scale(0.92) rotate(-14deg); opacity:1;}
+    75%{transform:scale(1.08) rotate(-16deg);}
+    100%{transform:scale(1) rotate(-15deg); opacity:1;}
+  }
+  .stamp-mark.play{animation:stampIn .55s ease forwards;}
+
+  footer.note{
+    max-width:640px; margin:18px auto 0; padding:0 16px;
+    font-size:11.5px; color:var(--ink-soft); text-align:center;
+    font-family:var(--font-mono);
+  }
+
+  .cv-preview{
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+    display:flex;
+    font-family:'IBM Plex Sans', sans-serif;
+    background:#fff;
+    box-shadow:0 4px 18px rgba(27,42,74,.12);
+    min-height:520px;
+  }
+  .cv-side{
+    width:34%;
+    background:#E4E4E4;
+    padding:18px 12px;
+    color:#1B1B1B;
+  }
+  .cv-side .cv-photo{
+    width:78px; height:78px; border-radius:50%;
+    background:#c9c9c9; margin:0 auto 14px;
+    overflow:hidden; display:flex; align-items:center; justify-content:center;
+    font-size:9px; color:#777; text-align:center;
+  }
+  .cv-side .cv-photo img{width:100%; height:100%; object-fit:cover;}
+  .cv-side h4{font-size:11px; margin:14px 0 4px; border-bottom:1px dashed #999; padding-bottom:4px;}
+  .cv-side p, .cv-side div.lg{font-size:9.5px; margin:2px 0;}
+  .cv-main{width:66%; padding:20px 16px; background:#fff;}
+  .cv-main h1{font-family:'Space Grotesk',sans-serif; font-size:22px; margin:0 0 2px; color:#1B1B1B;}
+  .cv-main .cv-role{font-size:11px; color:#666; margin-bottom:14px;}
+  .cv-sec-title{
+    display:flex; align-items:center; gap:6px;
+    font-size:12px; font-weight:700; margin:14px 0 6px; color:#1B1B1B;
+  }
+  .cv-sec-title .dot{width:16px; height:16px; border-radius:50%; background:#2B2B2B;}
+  .cv-main p.body-text{font-size:10px; color:#333; line-height:1.5; margin:0 0 6px;}
+  .cv-main ul{margin:4px 0; padding-left:16px;}
+  .cv-main li{font-size:9.6px; color:#333; margin-bottom:3px; line-height:1.4;}
+  .cv-two-col{columns:2; column-gap:14px;}
+  .preview-watermark{
+    text-align:center; font-family:var(--font-mono); font-size:11px;
+    color:var(--gold-deep); margin-top:10px; letter-spacing:.05em;
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">ESCO-<span>CV</span>.sn</div>
+  <div class="tag">CRÉEZ UN CV PROFESSIONNEL — SANS RIEN Y CONNAÎTRE</div>
+</header>
+
+<div class="wrap">
+  <div class="tabs" id="tabs"></div>
+  <div class="card" id="card"></div>
+</div>
+
+<footer class="note">PROTOTYPE FRONT-END — le PDF final est généré côté serveur avec le même design que l'aperçu</footer>
+
+<div class="stamp-overlay" id="stampOverlay">
+  <div class="stamp-mark" id="stampMark">VALIDÉ</div>
+</div>
+
+<script>
+const NUMERO_PAIEMENT = "76 380 45 57";
+const PRIX = "1 000 F";
+
+const steps = ["Infos", "Photo", "Filière", "Formation", "Expérience", "Compétences", "Langues", "Projets", "Modèle", "Aperçu", "Paiement"];
+let current = 0;
+let completed = new Set();
+
+const NIVEAUX = ["A1","A2","B1","B2","C1","C2"];
+
+const data = {
+  infos:{nom:"",prenom:"",tel:"",email:"",ville:""},
+  photo:null,
+  filiere:"",
+  formations:[{diplome:"",ecole:"",annee:""}],
+  experiences:[{poste:"",structure:"",periode:""}],
+  competences:"",
+  langues:[{langue:"Français", niveau:"C2"}],
+  projets:[{titre:"",description:""}],
+  template:"classic"
+};
+
+const filieres = ["Informatique Appliquée à la gestion des entreprises","Commerce & Gestion","Comptabilité & Finance","Santé","Droit des affaires","Droit & Juridique","Agriculture & Élevage","BTP & Génie Civil","Communication & Marketing","Tourisme & Hôtellerie","Électricité & Mécanique","Transport & Logistique","Art & Design","Autre"];
+
+function renderTabs(){
+  const el = document.getElementById('tabs');
+  el.innerHTML = steps.map((s,i)=>{
+    const cls = ['tab'];
+    if(i===current) cls.push('active');
+    if(completed.has(i)) cls.push('done');
+    return `<div class="${cls.join(' ')}" data-i="${i}"><span class="stamp-dot"></span>${String(i+1).padStart(2,'0')} · ${s}</div>`;
+  }).join('');
+  [...el.children].forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      const i = parseInt(tab.dataset.i);
+      if(i<=current || completed.has(i-1) || i===0){ current=i; render(); }
+    });
+  });
+}
+
+function playStamp(){
+  const mark = document.getElementById('stampMark');
+  mark.classList.remove('play');
+  void mark.offsetWidth;
+  mark.classList.add('play');
+  setTimeout(()=>mark.classList.remove('play'), 700);
+}
+
+function next(){
+  completed.add(current);
+  playStamp();
+  if(current < steps.length-1){ current++; render(); }
+}
+function prev(){ if(current>0){ current--; render(); } }
+
+function addFormation(){ data.formations.push({diplome:"",ecole:"",annee:""}); render(); }
+function removeFormation(i){ data.formations.splice(i,1); render(); }
+function addExperience(){ data.experiences.push({poste:"",structure:"",periode:""}); render(); }
+function removeExperience(i){ data.experiences.splice(i,1); render(); }
+function addLangue(){ data.langues.push({langue:"", niveau:"B1"}); render(); }
+function removeLangue(i){ data.langues.splice(i,1); render(); }
+function addProjet(){ data.projets.push({titre:"", description:""}); render(); }
+function removeProjet(i){ data.projets.splice(i,1); render(); }
+
+function handlePhoto(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{ data.photo = e.target.result; render(); };
+  reader.readAsDataURL(file);
+}
+
+function levelBars(i){
+  const cur = data.langues[i].niveau;
+  const idx = NIVEAUX.indexOf(cur);
+  const labels = {A1:'Débutant',A2:'Élémentaire',B1:'Intermédiaire',B2:'Intermédiaire avancé',C1:'Avancé',C2:'Courant/Bilingue'};
+  return `<div class="level-bars">
+    ${NIVEAUX.map((n,j)=>`<div class="level-seg ${j<=idx?'filled':''}" onclick="data.langues[${i}].niveau='${n}'; render();"></div>`).join('')}
+  </div>
+  <div class="level-label">${cur} — ${labels[cur]}</div>`;
+}
+
+function cvPreviewHTML(){
+  const nomComplet = (data.infos.prenom + " " + data.infos.nom).trim() || "Votre Nom";
+  const competencesList = data.competences.split(',').map(s=>s.trim()).filter(Boolean);
+  return `
+    <div class="cv-preview">
+      <div class="cv-side">
+        <div class="cv-photo">${data.photo ? `<img src="${data.photo}">` : 'PHOTO'}</div>
+        <h4>COORDONNÉES</h4>
+        <p>${data.infos.ville || 'Ville'}</p>
+        <p>${data.infos.tel || 'Téléphone'}</p>
+        <p>${data.infos.email || 'Email'}</p>
+        <h4>LANGUES</h4>
+        ${data.langues.map(l=>`<div class="lg"><strong>${l.langue||'Langue'}</strong> — ${l.niveau}</div>`).join('')}
+      </div>
+      <div class="cv-main">
+        <h1>${nomComplet}</h1>
+        <div class="cv-role">${data.filiere || 'Filière'}</div>
+
+        <div class="cv-sec-title"><span class="dot"></span>PROFIL PROFESSIONNEL</div>
+        <p class="body-text">${data.filiere ? `Profil orienté ${data.filiere.toLowerCase()}, motivé et rigoureux dans son travail.` : 'Décrivez brièvement votre profil dans les étapes précédentes.'}</p>
+
+        ${competencesList.length ? `
+        <div class="cv-sec-title"><span class="dot"></span>COMPÉTENCES</div>
+        <ul class="cv-two-col">${competencesList.map(c=>`<li>${c}</li>`).join('')}</ul>` : ''}
+
+        <div class="cv-sec-title"><span class="dot"></span>PARCOURS PROFESSIONNEL</div>
+        ${data.experiences.filter(e=>e.poste).map(e=>`
+          <p class="body-text"><strong>${e.poste}</strong> — ${e.structure}${e.periode ? ' · '+e.periode : ''}</p>
+        `).join('') || '<p class="body-text">Aucune expérience renseignée.</p>'}
+
+        <div class="cv-sec-title"><span class="dot"></span>FORMATION</div>
+        ${data.formations.filter(f=>f.diplome).map(f=>`
+          <p class="body-text"><strong>${f.diplome}</strong> — ${f.ecole}${f.annee ? ', '+f.annee : ''}</p>
+        `).join('') || '<p class="body-text">Aucune formation renseignée.</p>'}
+
+        ${data.projets.filter(p=>p.titre).length ? `
+        <div class="cv-sec-title"><span class="dot"></span>PROJETS RÉALISÉS</div>
+        <ul>${data.projets.filter(p=>p.titre).map(p=>`<li><strong>${p.titre}</strong>${p.description ? ' — '+p.description : ''}</li>`).join('')}</ul>` : ''}
+      </div>
+    </div>
+    <div class="preview-watermark">APERÇU — le PDF final sera net, en haute résolution, sans ce filigrane</div>
+  `;
+}
+
+function stepContent(){
+  switch(current){
+    case 0: return `
+      <div class="step-eyebrow">ÉTAPE 01</div>
+      <div class="step-title">Qui es-tu ?</div>
+      <div class="step-sub">Ces informations apparaîtront en haut de ton CV.</div>
+      <div class="row2">
+        <div><label>Prénom</label><input type="text" value="${data.infos.prenom}" oninput="data.infos.prenom=this.value"></div>
+        <div><label>Nom</label><input type="text" value="${data.infos.nom}" oninput="data.infos.nom=this.value"></div>
+      </div>
+      <label>Téléphone</label><input type="tel" placeholder="77 000 00 00" value="${data.infos.tel}" oninput="data.infos.tel=this.value">
+      <label>Email</label><input type="email" placeholder="prenom.nom@email.com" value="${data.infos.email}" oninput="data.infos.email=this.value">
+      <label>Ville</label><input type="text" placeholder="Mbour, Thiès, Dakar…" value="${data.infos.ville}" oninput="data.infos.ville=this.value">
+    `;
+    case 1: return `
+      <div class="step-eyebrow">ÉTAPE 02</div>
+      <div class="step-title">Ta photo</div>
+      <div class="step-sub">Une photo simple, fond neutre, visage bien visible.</div>
+      <div class="photo-zone">
+        <div class="photo-preview">${data.photo ? `<img src="${data.photo}">` : 'PAS DE<br>PHOTO'}</div>
+        <div>
+          <input type="file" accept="image/*" id="photoInput" style="display:none" onchange="handlePhoto(this)">
+          <button class="btn-upload" onclick="document.getElementById('photoInput').click()">CHOISIR UNE PHOTO</button>
+        </div>
+      </div>
+    `;
+    case 2: return `
+      <div class="step-eyebrow">ÉTAPE 03</div>
+      <div class="step-title">Ta filière</div>
+      <div class="step-sub">On adapte le contenu et le vocabulaire du CV selon ton domaine.</div>
+      <div class="chip-grid">
+        ${filieres.map(f=>`<div class="chip ${data.filiere===f?'selected':''}" onclick="data.filiere='${f}'; render();">${f}</div>`).join('')}
+      </div>
+    `;
+    case 3: return `
+      <div class="step-eyebrow">ÉTAPE 04</div>
+      <div class="step-title">Ta formation</div>
+      <div class="step-sub">Diplômes, du plus récent au plus ancien.</div>
+      ${data.formations.map((f,i)=>`
+        <div class="entry">
+          ${data.formations.length>1?`<button class="entry-remove" onclick="removeFormation(${i})">RETIRER</button>`:''}
+          <label>Diplôme / formation</label><input type="text" value="${f.diplome}" oninput="data.formations[${i}].diplome=this.value">
+          <label>École / établissement</label><input type="text" value="${f.ecole}" oninput="data.formations[${i}].ecole=this.value">
+          <label>Année</label><input type="text" placeholder="2024" value="${f.annee}" oninput="data.formations[${i}].annee=this.value">
+        </div>
+      `).join('')}
+      <button class="btn-add" onclick="addFormation()">+ AJOUTER UNE FORMATION</button>
+    `;
+    case 4: return `
+      <div class="step-eyebrow">ÉTAPE 05</div>
+      <div class="step-title">Tes expériences</div>
+      <div class="step-sub">Stages, jobs, bénévolat — tout compte. Laisse vide si c'est ton premier CV.</div>
+      ${data.experiences.map((x,i)=>`
+        <div class="entry">
+          ${data.experiences.length>1?`<button class="entry-remove" onclick="removeExperience(${i})">RETIRER</button>`:''}
+          <label>Poste</label><input type="text" value="${x.poste}" oninput="data.experiences[${i}].poste=this.value">
+          <label>Structure</label><input type="text" value="${x.structure}" oninput="data.experiences[${i}].structure=this.value">
+          <label>Période</label><input type="text" placeholder="Juin 2023 – Août 2023" value="${x.periode}" oninput="data.experiences[${i}].periode=this.value">
+        </div>
+      `).join('')}
+      <button class="btn-add" onclick="addExperience()">+ AJOUTER UNE EXPÉRIENCE</button>
+    `;
+    case 5: return `
+      <div class="step-eyebrow">ÉTAPE 06</div>
+      <div class="step-title">Compétences</div>
+      <div class="step-sub">Sépare chaque compétence par une virgule.</div>
+      <label>Compétences</label><textarea oninput="data.competences=this.value" placeholder="Word, Excel, gestion de projet, WordPress…">${data.competences}</textarea>
+    `;
+    case 6: return `
+      <div class="step-eyebrow">ÉTAPE 07</div>
+      <div class="step-title">Tes langues</div>
+      <div class="step-sub">Choisis un niveau pour chaque langue — il s'affichera en barres sur le CV.</div>
+      ${data.langues.map((l,i)=>`
+        <div class="entry">
+          ${data.langues.length>1?`<button class="entry-remove" onclick="removeLangue(${i})">RETIRER</button>`:''}
+          <label>Langue</label><input type="text" value="${l.langue}" oninput="data.langues[${i}].langue=this.value" placeholder="Français, Wolof, Anglais…">
+          <label>Niveau</label>
+          ${levelBars(i)}
+        </div>
+      `).join('')}
+      <button class="btn-add" onclick="addLangue()">+ AJOUTER UNE LANGUE</button>
+    `;
+    case 7: return `
+      <div class="step-eyebrow">ÉTAPE 08</div>
+      <div class="step-title">Projets réalisés</div>
+      <div class="step-sub">Facultatif — un exposé, un site, une initiative associative...</div>
+      ${data.projets.map((p,i)=>`
+        <div class="entry">
+          ${data.projets.length>1?`<button class="entry-remove" onclick="removeProjet(${i})">RETIRER</button>`:''}
+          <label>Titre du projet</label><input type="text" value="${p.titre}" oninput="data.projets[${i}].titre=this.value">
+          <label>Description</label><textarea oninput="data.projets[${i}].description=this.value">${p.description}</textarea>
+        </div>
+      `).join('')}
+      <button class="btn-add" onclick="addProjet()">+ AJOUTER UN PROJET</button>
+    `;
+    case 8: return `
+      <div class="step-eyebrow">ÉTAPE 09</div>
+      <div class="step-title">Choisis un modèle</div>
+      <div class="step-sub">Le PDF final reprendra ce style.</div>
+      <div class="tpl-grid">
+        <div class="tpl-card ${data.template==='classic'?'selected':''}" onclick="data.template='classic'; render();">
+          <div class="tpl-mini classic"></div>
+          <div class="tpl-name">CLASSIQUE</div>
+        </div>
+        <div class="tpl-card ${data.template==='moderne'?'selected':''}" onclick="data.template='moderne'; render();">
+          <div class="tpl-mini moderne"></div>
+          <div class="tpl-name">MODERNE</div>
+        </div>
+      </div>
+    `;
+    case 9: return `
+      <div class="step-eyebrow">ÉTAPE 10</div>
+      <div class="step-title">Aperçu de ton CV</div>
+      <div class="step-sub">Regarde le rendu avant de payer. Tu peux encore revenir en arrière pour corriger.</div>
+      ${cvPreviewHTML()}
+    `;
+    case 10: return `
+      <div class="step-eyebrow">ÉTAPE 11</div>
+      <div class="step-title">Paiement</div>
+      <div class="step-sub">Ton CV est prêt. Paie pour recevoir le PDF final en haute résolution, sans filigrane.</div>
+      <div class="recap-line"><span>Nom</span><span>${data.infos.prenom} ${data.infos.nom}</span></div>
+      <div class="recap-line"><span>Filière</span><span>${data.filiere||'—'}</span></div>
+      <div class="recap-line"><span>Modèle</span><span>${data.template==='classic'?'Classique':'Moderne'}</span></div>
+      <div class="price-box">
+        <span>CV en PDF (HD)</span>
+        <span class="amount">${PRIX}</span>
+      </div>
+      <div class="pay-number-box">
+        <div class="label">NUMÉRO WAVE / ORANGE MONEY</div>
+        <div class="number">${NUMERO_PAIEMENT}</div>
+      </div>
+      <div class="pay-options">
+        <button class="pay-btn wave" onclick="alert('Ouvrir Wave et envoyer ${PRIX} au ${NUMERO_PAIEMENT}')">PAYER AVEC WAVE</button>
+        <button class="pay-btn om" onclick="alert('Ouvrir Orange Money et envoyer ${PRIX} au ${NUMERO_PAIEMENT}')">PAYER AVEC ORANGE MONEY</button>
+      </div>
+      <div class="pay-note">Après le paiement, envoie une capture du reçu — le PDF final est débloqué automatiquement une fois le paiement confirmé côté serveur (à connecter à l'API Wave/OM).</div>
+    `;
+  }
+}
+
+function render(){
+  renderTabs();
+  const card = document.getElementById('card');
+  card.innerHTML = stepContent() + `
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="prev()" ${current===0?'disabled':''}>← RETOUR</button>
+      ${current < steps.length-1
+        ? `<button class="btn btn-primary" onclick="next()">${current===9?'ALLER AU PAIEMENT →':'CONTINUER →'}</button>`
+        : `<button class="btn btn-primary" disabled>EN ATTENTE DU PAIEMENT</button>`}
+    </div>
+  `;
+}
+
+render();
+</script>
+
+</body>
+</html>
